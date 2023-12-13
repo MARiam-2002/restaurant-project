@@ -6,6 +6,7 @@ import restaurantRouter from "./modules/restaurant/restaurant.router.js";
 import bestFoodRouter from "./modules/bestFood/bestFood.router.js";
 import popularItemsRouter from "./modules/popularItems/popularItems.router.js";
 import { globalErrorHandling } from "./utils/errorHandling.js";
+import morgan from "morgan";
 
 const initApp = (app, express) => {
 

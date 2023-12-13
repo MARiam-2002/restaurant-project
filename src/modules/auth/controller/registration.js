@@ -26,7 +26,7 @@ export const register = asyncHandler(async (req, res, next) => {
     activationCode,
   });
 
-  const link = `http://localhost:5000/auth/confirmEmail/${activationCode}`;
+  const link = `https://restaurant-project-drab.vercel.app/auth/confirmEmail/${activationCode}`;
 
   const isSent = await sendEmail({
     to: email,
