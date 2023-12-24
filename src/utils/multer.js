@@ -41,7 +41,7 @@
 import multer, { diskStorage } from "multer";
 
 export const filterObject = {
-  image: ["image/png", "image/jpg"],
+  image: ["image/png", "image/jpeg"],
   pdf: ["application/pdf"],
   video: ["video/mp4"],
 };
@@ -55,4 +55,3 @@ export const fileUpload = (filterArray) => {
 
   return multer({ storage: diskStorage({}), fileFilter });
 };
-
