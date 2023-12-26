@@ -5,6 +5,13 @@ import { asyncHandler } from "../../utils/errorHandling.js";
 export const createPopularItems = asyncHandler(async (req, res, next) => {
   const { name, offer, review, status, speed } = req.body;
   let createPopularRestaurantItems;
+  createPopularRestaurantItems = await restaurantModel.create({
+    name,
+    offer,
+    speed,
+    review,
+    status,
+  });
   if (req.files.image) {
     const { secure_url, public_id } = await cloudinary.uploader.upload(
       req.files.image[0].path,
@@ -12,14 +19,10 @@ export const createPopularItems = asyncHandler(async (req, res, next) => {
         folder: `${process.env.FOLDER_CLOUDINARY}/restaurants/image`,
       }
     );
-    createPopularRestaurantItems = await restaurantModel.create({
-      name,
-      offer,
-      speed,
-      review,
-      status,
-      image: { id: public_id, url: secure_url },
-    });
+    createPopularRestaurantItems.image={ id: public_id, url: secure_url };
+    await createPopularRestaurantItems.save();
+
+
   }
   if (req.files.logo) {
     const { secure_url, public_id } = await cloudinary.uploader.upload(
