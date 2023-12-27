@@ -26,13 +26,10 @@ const restaurantSchema = new Schema(
     logo: {
       id: {
         type: String,
-        required: true,
-        default:"1235"
       },
       url: {
         type: String,
-        required: true,
-        default:"https://res.cloudinary.com/dz5dpvxg7/image/upload/v1698085841/resturant/popularItems/aik0vim0sit6aclz1led.png"
+        
       },
     },
     speed: {

@@ -17,11 +17,9 @@ const bestFoodSchema = new Schema(
     image: {
       id: {
         type: String,
-        required: true,
       },
       url: {
         type: String,
-        required: true,
       },
     },
   },
