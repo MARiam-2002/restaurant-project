@@ -6,8 +6,10 @@ import restaurantRouter from "./modules/restaurant/restaurant.router.js";
 import bestFoodRouter from "./modules/bestFood/bestFood.router.js";
 import popularItemsRouter from "./modules/popularItems/popularItems.router.js";
 import { globalErrorHandling } from "./utils/errorHandling.js";
-import cors from "cors";
-import morgan from "morgan";
+import pass from "../config/passport.stupp.js";
+import session from "express-session";
+import cors from "cors";import morgan from "morgan";
+import passport  from "passport";
 
 const initApp = (app, express) => {
 
@@ -15,7 +17,6 @@ const initApp = (app, express) => {
   if (process.env.MOOD == "DEV") {
     app.use(morgan("common"));
   }
-  app.use(cors());
   // const whiteList = ["http://127.0.0.1:5500",undefined];
 
   // app.use((req, res, next) => {
@@ -34,7 +35,12 @@ const initApp = (app, express) => {
   //   return next();
   // });
   //convert Buffer Data
+  app.use(cors());
+  //convert Buffer Data
   app.use(express.json());
+  app.use(session({ secret: "secret", resave: true, saveUninitialized: true }));
+  app.use(passport.initialize());
+  app.use(passport.session());
   //Setup API Routing
   app.use(`/auth`, authRouter);
   app.use("/food", foodRouter);

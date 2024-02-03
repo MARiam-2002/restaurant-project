@@ -1,31 +1,31 @@
 import jwt from "jsonwebtoken";
-import userModel from "../../DB/model/User.js";
+import { asyncHandler } from "../utils/errorHandling.js";
+import userModel from "../../DB/model/User.model.js";
 
 
 
-const auth = async (req, res, next) => {
-    try {
-        const { authorization } = req.headers;
-        if (!authorization?.startsWith(process.env.BEARER_KEY)) {
-            return res.json({ message: "In-valid bearer key" })
-        }
-        const token = authorization.split(process.env.BEARER_KEY)[1]
-        if (!token) {
-            return res.json({ message: "In-valid token" })
-        }
-        const decoded = jwt.verify(token, process.env.TOKEN_SIGNATURE)
-        if (!decoded?.id) {
-            return res.json({ message: "In-valid token payload" })
-        }
-        const authUser = await userModel.findById(decoded.id).select('userName email role')
-        if (!authUser) {
-            return res.json({ message: "Not register account" })
-        }
-        req.user = authUser;
-        return next()
-    } catch (error) {
-        return res.json({ message: "Catch error" , err:error?.message })
+const auth = asyncHandler(async (req, res, next) => {
+    let token = req.headers["token"];
+    if (!token) {
+      return res.json({ message: "In-valid token" });
     }
-}
+    const decoded = jwt.verify(token, process.env.TOKEN_SIGNATURE);
+    if (!decoded?.id) {
+      return res.json({ message: "In-valid token payload" });
+    }
+    const tokenDB = await tokenModel.findOne({ token, isValid: true });
+  
+    if (!tokenDB) {
+      return next(new Error("Token expired!"));
+    }
+    const authUser = await userModel
+      .findById(decoded.id)
+      .select("userName email role");
+    if (!authUser) {
+      return res.json({ message: "Not register account" });
+    }
+    req.user = authUser;
+    return next();
+  });
 
 export default auth

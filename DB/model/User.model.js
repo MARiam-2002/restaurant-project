@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Schema, Types, model } from "mongoose";
 
 const userSchema = new Schema(
   {
@@ -8,15 +8,15 @@ const userSchema = new Schema(
       min: 3,
       max: 20,
     },
+    googleId: String,
     email: {
       type: String,
-      required: true,
       unique: true,
+      required: true,
       lowercase: true,
     },
     password: {
       type: String,
-      required: true,
     },
     gender: {
       type: String,
@@ -28,12 +28,43 @@ const userSchema = new Schema(
       enum: ["online", "offline"],
       default: "offline",
     },
-
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+      required: true,
+    },
+    wishlist: [Types.ObjectId],
     isConfirmed: {
       type: Boolean,
       default: false,
     },
+    forgetCode: String,
     activationCode: String,
+    profileImage: {
+      url: {
+        type: String,
+        default:
+          "https://res.cloudinary.com/dz5dpvxg7/image/upload/v1706484939/fast-plate/Screenshot_2022-09-10_040814_vhfktx.png",
+      },
+      id: {
+        type: String,
+        default:
+          "fast-plate/Screenshot_2022-09-10_040814_vhfktx.png",
+      },
+    },
+    coverImages: [
+      {
+        url: {
+          type: String,
+          required: true,
+        },
+        id: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
