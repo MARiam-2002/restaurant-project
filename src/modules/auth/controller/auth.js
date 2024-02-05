@@ -28,7 +28,7 @@ export const register = asyncHandler(async (req, res, next) => {
     activationCode,
   });
 
-  const link = `https://backend-developer-xi.vercel.app/auth/confirmEmail/${activationCode}`;
+  const link = `https://restaurant-project-drab.vercel.app/auth/confirmEmail/${activationCode}`;
 
   const isSent = await sendEmail({
     to: email,
@@ -110,7 +110,7 @@ export const sendForgetCode = asyncHandler(async (req, res, next) => {
   await user.save();
   const token = jwt.sign(
     { id: user._id, email: user.email },
-    process.env.TOKEN_SIGNATURE,
+    process.env.TOKEN_SIGNATURE
   );
   await tokenModel.create({
     token,
@@ -122,7 +122,9 @@ export const sendForgetCode = asyncHandler(async (req, res, next) => {
     subject: "Reset Password",
     html: resetPassword(code),
   }))
-    ? res.status(200).json({ success: true, message: "check you email!",token })
+    ? res
+        .status(200)
+        .json({ success: true, message: "check you email!", token })
     : next(new Error("Something went wrong!", { cause: 400 }));
 });
 
@@ -149,7 +151,7 @@ export const resetPasswordByCode = asyncHandler(async (req, res, next) => {
 
 export const VerifyCode = asyncHandler(async (req, res, next) => {
   const user = await userModel.findOne({ email: req.user.email });
-  if(!user.forgetCode){
+  if (!user.forgetCode) {
     return next(new Error("go to resend forget code", { status: 400 }));
   }
   if (user.forgetCode !== req.body.forgetCode) {
@@ -159,7 +161,7 @@ export const VerifyCode = asyncHandler(async (req, res, next) => {
     { email: req.user.email },
     { $unset: { forgetCode: 1 } }
   );
-  
+
   return res
     .status(200)
     .json({ success: true, message: "go to reset new password" });
