@@ -2,7 +2,6 @@ import connectDB from "../DB/connection.js";
 import authRouter from "./modules/auth/auth.router.js";
 import foodRouter from "./modules/food/food.router.js";
 import mealRouter from "./modules/meal/meal.router.js";
-import restaurantRouter from "./modules/restaurant/restaurant.router.js";
 import bestFoodRouter from "./modules/bestFood/bestFood.router.js";
 import popularItemsRouter from "./modules/popularItems/popularItems.router.js";
 import { globalErrorHandling } from "./utils/errorHandling.js";
@@ -45,7 +44,6 @@ const initApp = (app, express) => {
   app.use(`/auth`, authRouter);
   app.use("/food", foodRouter);
   app.use("/meal", mealRouter);
-  app.use("/restaurant", restaurantRouter);
   app.use("/bestFood", bestFoodRouter);
   app.use("/popularItems", popularItemsRouter);
   app.all("*", (req, res, next) => {
