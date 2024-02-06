@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { asyncHandler } from "../utils/errorHandling.js";
 import userModel from "../../DB/model/User.model.js";
+import tokenModel from "../../DB/model/Token.model.js";
 
 
 

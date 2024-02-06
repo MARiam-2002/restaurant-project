@@ -7,12 +7,11 @@ import popularItemsRouter from "./modules/popularItems/popularItems.router.js";
 import { globalErrorHandling } from "./utils/errorHandling.js";
 import pass from "../config/passport.stupp.js";
 import session from "express-session";
-import cors from "cors";import morgan from "morgan";
-import passport  from "passport";
+import cors from "cors";
+import morgan from "morgan";
+import passport from "passport";
 
 const initApp = (app, express) => {
-
-
   if (process.env.MOOD == "DEV") {
     app.use(morgan("common"));
   }
@@ -51,7 +50,6 @@ const initApp = (app, express) => {
   });
   app.use(globalErrorHandling);
 
-  connectDB();
 };
 
 export default initApp;
