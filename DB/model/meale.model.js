@@ -13,6 +13,11 @@ const mealSchema = new Schema(
     expired: {
       type: String,
     },
+    price: {
+      type: Number,
+      required: true,
+    },
+    favourite: { type: Boolean, default: false },
     image: {
       id: {
         type: String,

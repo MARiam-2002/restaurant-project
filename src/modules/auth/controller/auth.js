@@ -7,6 +7,7 @@ import { resetPassword, signupTemp } from "../../../utils/generateHtml.js";
 import tokenModel from "../../../../DB/model/Token.model.js";
 import randomstring from "randomstring";
 import userModel from "../../../../DB/model/User.model.js";
+import cartModel from "../../../../DB/model/cart.model.js";
 
 export const register = asyncHandler(async (req, res, next) => {
   const { userName, email, password } = req.body;
@@ -50,6 +51,8 @@ export const activationAccount = asyncHandler(async (req, res, next) => {
   if (!user) {
     return next(new Error("User Not Found!", { cause: 404 }));
   }
+  await cartModel.create({ user: user._id });
+
 
   return res
     .status(200)

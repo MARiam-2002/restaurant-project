@@ -8,7 +8,7 @@ const cartSchema = new Schema(
       required: true,
       unique: true,
     },
-    products: [
+    meals: [
       {
         _id: false,
         productId: {

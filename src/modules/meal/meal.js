@@ -1,3 +1,4 @@
+import userModel from "../../../DB/model/User.model.js";
 import mealModel from "../../../DB/model/meale.model.js";
 import cloudinary from "../../utils/cloudinary.js";
 import { asyncHandler } from "../../utils/errorHandling.js";
@@ -23,3 +24,44 @@ export const getMeal = asyncHandler(async (req, res, next) => {
   const meals = await mealModel.find({});
   res.json({ success: true, result: meals });
 });
+
+export const redHeart = asyncHandler(async (req, res, next) => {
+  const meal = await mealModel.findById(req.params.mealId);
+  if (!meal) {
+    return next(new Error("mealId not found", { cause: 404 }));
+  }
+  const user = await userModel.findById(req.user._id);
+
+  if (meal.favourite) {
+    meal.favourite = false;
+    await meal.save();
+    user.wishlist.pop(meal._id);
+    await user.save();
+    return res.status(200).json({
+      success: true,
+      message: "This meal is deleted from wishlist",
+      result: meal,
+    });
+  }
+  meal.favourite = true;
+  await meal.save();
+
+  user.wishlist.push(meal._id);
+  await user.save();
+  return res.status(200).json({
+    success: true,
+    message: "This meal has been added to the wishlist",
+    result: meal,
+  });
+});
+
+export const wishlist = asyncHandler(async (req, res, next) => {
+  const user = await userModel.findById(req.user._id);
+
+  return res.status(200).json({
+    success: true,
+    message: "These are all the products that you added to the wishlist",
+    results: user.wishlist,
+  });
+});
+
