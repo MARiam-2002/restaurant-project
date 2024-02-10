@@ -1,7 +1,7 @@
-import connectDB from "../DB/connection.js";
 import authRouter from "./modules/auth/auth.router.js";
 import foodRouter from "./modules/food/food.router.js";
 import mealRouter from "./modules/meal/meal.router.js";
+import cartRouter from "./modules/cart/cart.router.js";
 import bestFoodRouter from "./modules/bestFood/bestFood.router.js";
 import popularItemsRouter from "./modules/popularItems/popularItems.router.js";
 import { globalErrorHandling } from "./utils/errorHandling.js";
@@ -42,6 +42,7 @@ const initApp = (app, express) => {
   //Setup API Routing
   app.use(`/auth`, authRouter);
   app.use("/food", foodRouter);
+  app.use("/cart", cartRouter);
   app.use("/meal", mealRouter);
   app.use("/bestFood", bestFoodRouter);
   app.use("/popularItems", popularItemsRouter);
@@ -49,7 +50,6 @@ const initApp = (app, express) => {
     res.send("In-valid Routing Plz check url  or  method");
   });
   app.use(globalErrorHandling);
-
 };
 
 export default initApp;
