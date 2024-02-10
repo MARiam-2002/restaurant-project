@@ -11,9 +11,9 @@ const cartSchema = new Schema(
     meals: [
       {
         _id: false,
-        productId: {
+        mealId: {
           type: Types.ObjectId,
-          ref: "Product",
+          ref: "Meal",
         },
         quantity: {
           type: Number,

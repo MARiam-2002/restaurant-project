@@ -1,105 +1,77 @@
 import cartModel from "../../../../DB/model/cart.model.js";
+import mealModel from "../../../../DB/model/meale.model.js";
 import productModel from "../../../../DB/models/product.model.js";
 import { asyncHandler } from "../../../utils/asyncHandler.js";
 
 export const addMealInCart = asyncHandler(async (req, res, next) => {
+  const { mealId, quantity } = req.body;
+
   if (req.user.wishlist.length > 0) {
     req.user.wishlist.map(async (id) => {
-      let isProductInCart = await cartModel.findOne({
+      let isMealInCart = await cartModel.findOne({
         user: req.user._id,
-        "products.productId": id,
+        "meals.mealId": id,
       });
-      if (isProductInCart) {
-        isProductInCart.products.forEach((productObj) => {
-          let f = false;
-
-          if (
-            productObj.productId.toString() === productId.toString() &&
-            productObj.quantity + quantity <= product.availableItems
-          ) {
-            productObj.quantity = productObj.quantity + quantity;
-            f = true;
+      if (isMealInCart) {
+        isMealInCart.meals.forEach((mealObj) => {
+          if (mealObj.mealId.toString() === mealId.toString()) {
+            mealObj.quantity = mealObj.quantity + quantity;
           }
-          if (!f)
-            return res.json({
-              success: false,
-              message: "this quantity of product left on the stock !",
-            });
         });
 
-        await isProductInCart.save();
-        return res.json({
-          success: true,
-          results: isProductInCart,
-          message: "product added successfully!",
-        });
+        await isMealInCart.save();
       } else {
-        const cart = await cartModel.findOneAndUpdate(
+        await cartModel.findOneAndUpdate(
           { user: req.user._id },
-          { $push: { products: { id, quantity } } },
+          { $push: { meals: { id, quantity } } },
           { new: true }
         );
-        return res.json({
-          success: true,
-          results: cart,
-          message: "product added successfully!",
-        });
       }
+
+      req.user.wishlist = [];
+      req.user.save();
+      const cart = await cartModel.findOne({ user: req.user._id });
+      return res.json({
+        success: true,
+        results: cart,
+        message: "meal added successfully!",
+      });
     });
   }
 
-  const { productId, quantity } = req.body;
-
-  const product = await productModel.findById(productId);
-  if (!product) {
+  const meal = await mealModel.findById(mealId);
+  if (!meal) {
     return next(new Error("product not found ", { cause: 404 }));
   }
-  if (!product.inStock(quantity)) {
-    return next(
-      new Error(
-        `Sorry, only ${product.availableItems} Items left on the stock!`
-      )
-    );
-  }
 
-  let isProductInCart = await cartModel.findOne({
+  let isMealInCart = await cartModel.findOne({
     user: req.user._id,
-    "products.productId": productId,
+    "meals.mealId": mealId,
   });
 
-  let f = false;
-  if (isProductInCart) {
-    isProductInCart.products.forEach((productObj) => {
-      if (
-        productObj.productId.toString() === productId.toString() &&
-        productObj.quantity + quantity <= product.availableItems
-      ) {
-        productObj.quantity = productObj.quantity + quantity;
-        f = true;
+  if (isMealInCart) {
+    isMealInCart.products.forEach((mealObj) => {
+      if (mealObj.mealId.toString() === mealId.toString()) {
+        mealObj.quantity = mealModel.quantity + quantity;
       }
-      if (!f)
-        return res.json({
-          success: false,
-          message: "this quantity of product left on the stock !",
-        });
     });
 
-    await isProductInCart.save();
+    await isMealInCart.save();
     return res.json({
       success: true,
-      results: isProductInCart,
-      message: "product added successfully!",
+      results: isMealInCart,
+      message: "meal added successfully!",
     });
   } else {
     const cart = await cartModel.findOneAndUpdate(
       { user: req.user._id },
-      { $push: { products: { productId, quantity } } },
+      { $push: { meals: { mealId, quantity } } },
       { new: true }
     );
     return res.json({
       success: true,
       results: cart,
-      message: "product added successfully!",
+      message: "meal added successfully!",
     });
   }
 });
@@ -107,10 +79,7 @@ export const addMealInCart = asyncHandler(async (req, res, next) => {
 export const getMealInCart = asyncHandler(async (req, res, next) => {
   const cart = await cartModel
     .findOne({ user: req.user._id })
-    .populate(
-      "products.productId",
-      " name defaultImage.url price discount finalPrice"
-    );
+    .populate("meals.mealId", " title image.url price offer expired");
   return res.json({
     success: true,
     results: cart,
@@ -136,10 +105,10 @@ export const updateCart = asyncHandler(async (req, res, next) => {
   const cart = await cartModel.findOneAndUpdate(
     {
       user: req.user._id,
-      "products.productId": productId,
+      "meals.mealId": productId,
     },
     {
-      $set: { "products.$.quantity": quantity },
+      $set: { "meals.$.quantity": quantity },
     },
     {
       new: true,
@@ -157,7 +126,7 @@ export const removeMealFromCart = asyncHandler(async (req, res, next) => {
       user: req.user._id,
     },
     {
-      $pull: { products: { productId: req.params.productId } },
+      $pull: { meals: { mealId: req.params.mealId } },
     },
     {
       new: true,
@@ -173,7 +142,7 @@ export const removeMealFromCart = asyncHandler(async (req, res, next) => {
 export const clearCart = asyncHandler(async (req, res, next) => {
   const cart = await cartModel.findOneAndUpdate({
     user: req.user._id,
-    products: [],
+    meals: [],
   });
   return res.json({
     success: true,
