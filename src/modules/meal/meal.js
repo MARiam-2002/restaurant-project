@@ -4,7 +4,7 @@ import cloudinary from "../../utils/cloudinary.js";
 import { asyncHandler } from "../../utils/errorHandling.js";
 
 export const createMale = asyncHandler(async (req, res, next) => {
-  const { title, offer, expired ,price} = req.body;
+  const { title, offer, expired, price } = req.body;
   const { secure_url, public_id } = await cloudinary.uploader.upload(
     req.file.path,
     {
@@ -16,14 +16,14 @@ export const createMale = asyncHandler(async (req, res, next) => {
     offer,
     expired,
     image: { id: public_id, url: secure_url },
-    price
+    price,
   });
-  return res.json({ success: true, result: createMeal });
+  return res.json({ success: true, data: createMeal });
 });
 
 export const getMeal = asyncHandler(async (req, res, next) => {
   const meals = await mealModel.find({});
-  res.json({ success: true, data: { result: meals } });
+  res.json({ success: true, data: { meals } });
 });
 
 export const redHeart = asyncHandler(async (req, res, next) => {
