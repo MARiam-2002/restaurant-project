@@ -53,7 +53,6 @@ export const activationAccount = asyncHandler(async (req, res, next) => {
   }
   await cartModel.create({ user: user._id });
 
-
   return res
     .status(200)
     .send("Congratulation, Your Account is now activated, try to login");
@@ -92,7 +91,14 @@ export const login = asyncHandler(async (req, res, next) => {
   user.status = "online";
   await user.save();
 
-  return res.status(200).json({ success: true, result: token ,message:"login success",user:{ userName: user.userName, email: user.email }});
+  return res.status(200).json({
+    success: true,
+    token,
+    data: {
+      message: "login success",
+      user: { userName: user.userName, email: user.email },
+    },
+  });
 });
 
 //send forget Code
@@ -127,7 +133,7 @@ export const sendForgetCode = asyncHandler(async (req, res, next) => {
   }))
     ? res
         .status(200)
-        .json({ success: true, message: "check you email!", token })
+        .json({ success: true, token, data: { message: "check you email!" } })
     : next(new Error("Something went wrong!", { cause: 400 }));
 });
 
@@ -149,7 +155,9 @@ export const resetPasswordByCode = asyncHandler(async (req, res, next) => {
     await token.save();
   });
 
-  return res.status(200).json({ success: true, message: "Try to login!" });
+  return res
+    .status(200)
+    .json({ success: true, data: { message: "Try to login!" } });
 });
 
 export const VerifyCode = asyncHandler(async (req, res, next) => {
@@ -167,5 +175,5 @@ export const VerifyCode = asyncHandler(async (req, res, next) => {
 
   return res
     .status(200)
-    .json({ success: true, message: "go to reset new password" });
+    .json({ success: true, data: { message: "go to reset new password" } });
 });

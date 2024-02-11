@@ -22,7 +22,7 @@ export const createMale = asyncHandler(async (req, res, next) => {
 
 export const getMeal = asyncHandler(async (req, res, next) => {
   const meals = await mealModel.find({});
-  res.json({ success: true, result: meals });
+  res.json({ success: true, data: { result: meals } });
 });
 
 export const redHeart = asyncHandler(async (req, res, next) => {
@@ -39,8 +39,10 @@ export const redHeart = asyncHandler(async (req, res, next) => {
     await user.save();
     return res.status(200).json({
       success: true,
-      message: "This meal is deleted from wishlist",
-      result: meal,
+      data: {
+        message: "This meal is deleted from wishlist",
+        result: meal,
+      },
     });
   }
   meal.favourite = true;
@@ -50,8 +52,10 @@ export const redHeart = asyncHandler(async (req, res, next) => {
   await user.save();
   return res.status(200).json({
     success: true,
-    message: "This meal has been added to the wishlist",
-    result: meal,
+    data: {
+      message: "This meal has been added to the wishlist",
+      result: meal,
+    },
   });
 });
 
@@ -60,8 +64,9 @@ export const wishlist = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-    message: "These are all the products that you added to the wishlist",
-    results: user.wishlist,
+    data: {
+      message: "These are all the products that you added to the wishlist",
+      results: user.wishlist,
+    },
   });
 });
-
