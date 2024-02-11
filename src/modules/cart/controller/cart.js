@@ -5,38 +5,38 @@ import { asyncHandler } from "../../../utils/errorHandling.js";
 export const addMealInCart = asyncHandler(async (req, res, next) => {
   const { mealId, quantity } = req.body;
 
-  if (req.user.wishlist.length > 0) {
-    req.user.wishlist.map(async (id) => {
-      let isMealInCart = await cartModel.findOne({
-        user: req.user._id,
-        "meals.mealId": id,
-      });
-      if (isMealInCart) {
-        isMealInCart.meals.forEach((mealObj) => {
-          if (mealObj.mealId.toString() === mealId.toString()) {
-            mealObj.quantity = mealObj.quantity + quantity;
-          }
-        });
+  // if (req.user.wishlist.length > 0) {
+  //   req.user.wishlist.map(async (id) => {
+  //     let isMealInCart = await cartModel.findOne({
+  //       user: req.user._id,
+  //       "meals.mealId": id,
+  //     });
+  //     if (isMealInCart) {
+  //       isMealInCart.meals.forEach((mealObj) => {
+  //         if (mealObj.mealId.toString() === id.toString()) {
+  //           mealObj.quantity = mealObj.quantity + quantity;
+  //         }
+  //       });
 
-        await isMealInCart.save();
-      } else {
-        await cartModel.findOneAndUpdate(
-          { user: req.user._id },
-          { $push: { meals: { id, quantity } } },
-          { new: true }
-        );
-      }
+  //       await isMealInCart.save();
+  //     } else {
+  //       await cartModel.findOneAndUpdate(
+  //         { user: req.user._id },
+  //         { $push: { meals: { id, quantity } } },
+  //         { new: true }
+  //       );
+  //     }
 
-      req.user.wishlist = [];
-      req.user.save();
-      const cart = await cartModel.findOne({ user: req.user._id });
-      return res.json({
-        success: true,
-        results: cart,
-        message: "meal added successfully!",
-      });
-    });
-  }
+  //     req.user.wishlist = [];
+  //     req.user.save();
+  //     const cart = await cartModel.findOne({ user: req.user._id });
+  //     return res.json({
+  //       success: true,
+  //       results: cart,
+  //       message: "meal added successfully!",
+  //     });
+  //   });
+  // }
 
   const meal = await mealModel.findById(mealId);
   if (!meal) {
@@ -75,6 +75,21 @@ export const addMealInCart = asyncHandler(async (req, res, next) => {
   }
 });
 
+export const addWhishlist = asyncHandler(async (req, res, next) => {
+  const cart = await cartModel.findOneAndUpdate(
+    { user: req.user._id },
+    { $push: { meals: { id, quantity: 1 } } },
+    { new: true }
+  );
+
+  req.user.wishlist = [];
+  req.user.save();
+  return res.json({
+    success: true,
+    results: cart,
+    message: "meals of whishList added successfully!",
+  });
+});
 export const getMealInCart = asyncHandler(async (req, res, next) => {
   const cart = await cartModel
     .findOne({ user: req.user._id })

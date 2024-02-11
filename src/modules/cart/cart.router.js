@@ -11,6 +11,12 @@ router.post(
   validation(validators.cartSchema),
   cartController.addMealInCart
 );
+router.post(
+  "/whishlist",
+  auth,
+  validation(validators.cartSchema),
+  cartController.addWhishlist
+);
 router.get("/", auth, cartController.getMealInCart);
 
 router.patch("/clear", auth, cartController.clearCart);
