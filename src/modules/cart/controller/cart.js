@@ -1,6 +1,6 @@
 import cartModel from "../../../../DB/model/cart.model.js";
 import mealModel from "../../../../DB/model/meale.model.js";
-import { asyncHandler } from "../../../utils/asyncHandler.js";
+import { asyncHandler } from "../../../utils/errorHandling.js";
 
 export const addMealInCart = asyncHandler(async (req, res, next) => {
   const { mealId, quantity } = req.body;

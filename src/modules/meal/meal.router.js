@@ -22,10 +22,5 @@ router.get(
   auth,
   mealController.wishlist
 );
-router.patch(
-  "/deleteWishlist/:mealId",
-  auth,
-  mealController.deleteWishlist
-);
 router.get("/getallMeal", mealController.getMeal);
 export default router;

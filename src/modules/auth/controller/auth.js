@@ -92,7 +92,7 @@ export const login = asyncHandler(async (req, res, next) => {
   user.status = "online";
   await user.save();
 
-  return res.status(200).json({ success: true, result: token });
+  return res.status(200).json({ success: true, result: token ,message:"login success",user:{ userName: user.userName, email: user.email }});
 });
 
 //send forget Code
