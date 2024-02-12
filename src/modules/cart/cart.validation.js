@@ -8,7 +8,7 @@ export const cartSchema = joi
   })
   .required();
 
-export const removeProductFromCart = joi
+export const removeMealFromCart = joi
   .object({
     mealId: joi.string().custom(validateObjectId).required(),
   })

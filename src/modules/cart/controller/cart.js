@@ -53,7 +53,7 @@ export const addMealInCart = asyncHandler(async (req, res, next) => {
   if (isMealInCart) {
     isMealInCart.meals.forEach((mealObj) => {
       if (mealObj.mealId.toString() === mealId.toString()) {
-        mealObj.quantity = mealModel.quantity + quantity;
+        mealObj.quantity = mealObj.quantity + quantity;
       }
     });
 
@@ -96,7 +96,7 @@ export const addWhishlist = asyncHandler(async (req, res, next) => {
       if (isMealInCart) {
         isMealInCart.meals.forEach((mealObj) => {
           if (mealObj.mealId.toString() === id.toString()) {
-            mealObj.quantity = +mealObj.quantity+1;
+            mealObj.quantity = +mealObj.quantity + 1;
           }
         });
 
@@ -104,7 +104,7 @@ export const addWhishlist = asyncHandler(async (req, res, next) => {
       } else {
         await cartModel.findOneAndUpdate(
           { user: req.user._id },
-          { $push: { meals: { mealId:id, quantity: 1 } } },
+          { $push: { meals: { mealId: id, quantity: 1 } } },
           { new: true }
         );
       }
