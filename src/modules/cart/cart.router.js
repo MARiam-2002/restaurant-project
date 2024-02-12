@@ -14,7 +14,6 @@ router.post(
 router.post(
   "/whishlist",
   auth,
-  validation(validators.cartSchema),
   cartController.addWhishlist
 );
 router.get("/", auth, cartController.getMealInCart);
