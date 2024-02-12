@@ -96,7 +96,7 @@ export const addWhishlist = asyncHandler(async (req, res, next) => {
       if (isMealInCart) {
         isMealInCart.meals.forEach((mealObj) => {
           if (mealObj.mealId.toString() === id.toString()) {
-            mealObj.quantity = mealObj.quantity + 1;
+            mealObj.quantity = mealObj.quantity+1;
           }
         });
 
