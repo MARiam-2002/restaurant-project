@@ -104,7 +104,7 @@ export const addWhishlist = asyncHandler(async (req, res, next) => {
       } else {
         await cartModel.findOneAndUpdate(
           { user: req.user._id },
-          { $push: { meals: { id, quantity: 1 } } },
+          { $push: { meals: { mealId:id, quantity: 1 } } },
           { new: true }
         );
       }
