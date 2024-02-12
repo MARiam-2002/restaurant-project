@@ -159,6 +159,11 @@ export const updateCart = asyncHandler(async (req, res, next) => {
       new: true,
     }
   );
+
+  if(!cart){
+    return next(new Error("mealId not found in the cart to update ", { cause: 404 }));
+
+  }
   return res.json({
     success: true,
     data: { cart },
