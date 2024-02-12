@@ -51,7 +51,7 @@ export const addMealInCart = asyncHandler(async (req, res, next) => {
   });
 
   if (isMealInCart) {
-    isMealInCart.products.forEach((mealObj) => {
+    isMealInCart.meals.forEach((mealObj) => {
       if (mealObj.mealId.toString() === mealId.toString()) {
         mealObj.quantity = mealModel.quantity + quantity;
       }
