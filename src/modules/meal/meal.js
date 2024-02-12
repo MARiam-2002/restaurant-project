@@ -31,13 +31,12 @@ export const redHeart = asyncHandler(async (req, res, next) => {
   if (!meal) {
     return next(new Error("mealId not found", { cause: 404 }));
   }
-  const user = await userModel.findById(req.user._id);
 
   if (meal.favourite) {
     meal.favourite = false;
     await meal.save();
-    user.wishlist.pop(meal._id);
-    await user.save();
+    req.user.wishlist.pop(meal._id);
+    await req.user.save();
     return res.status(200).json({
       success: true,
       data: {
@@ -49,8 +48,8 @@ export const redHeart = asyncHandler(async (req, res, next) => {
   meal.favourite = true;
   await meal.save();
 
-  user.wishlist.push(meal._id);
-  await user.save();
+  req.user.wishlist.push(meal._id);
+  await req.user.save();
   return res.status(200).json({
     success: true,
     data: {
