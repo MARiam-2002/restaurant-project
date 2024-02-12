@@ -23,7 +23,7 @@ export const createMale = asyncHandler(async (req, res, next) => {
 
 export const getMeal = asyncHandler(async (req, res, next) => {
   const meals = await mealModel.find({});
-  res.json({ success: true, data: { data: meals } });
+  res.json({ success: true, data: { meals } });
 });
 
 export const redHeart = asyncHandler(async (req, res, next) => {
