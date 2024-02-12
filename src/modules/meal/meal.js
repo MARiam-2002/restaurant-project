@@ -4,7 +4,7 @@ import cloudinary from "../../utils/cloudinary.js";
 import { asyncHandler } from "../../utils/errorHandling.js";
 
 export const createMale = asyncHandler(async (req, res, next) => {
-  const { title, offer, expired ,price} = req.body;
+  const { title, offer, expired, price } = req.body;
   const { secure_url, public_id } = await cloudinary.uploader.upload(
     req.file.path,
     {
@@ -16,7 +16,7 @@ export const createMale = asyncHandler(async (req, res, next) => {
     offer,
     expired,
     image: { id: public_id, url: secure_url },
-    price
+    price,
   });
   return res.json({ success: true, data: createMeal });
 });
@@ -32,11 +32,11 @@ export const redHeart = asyncHandler(async (req, res, next) => {
     return next(new Error("mealId not found", { cause: 404 }));
   }
 
-  if (!meal.favourite) {
-    meal.favourite = false;
-    await meal.save();
+  if (meal.favourite) {
     req.user.wishlist.pop(meal._id);
     await req.user.save();
+    meal.favourite = false;
+    await meal.save();
     return res.status(200).json({
       success: true,
       data: {
@@ -45,6 +45,7 @@ export const redHeart = asyncHandler(async (req, res, next) => {
       },
     });
   }
+  
   meal.favourite = true;
   await meal.save();
 
