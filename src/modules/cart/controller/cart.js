@@ -76,18 +76,34 @@ export const addMealInCart = asyncHandler(async (req, res, next) => {
 });
 
 export const addWhishlist = asyncHandler(async (req, res, next) => {
-  const cart = await cartModel.findOneAndUpdate(
-    { user: req.user._id },
-    { $push: { meals: { id, quantity: 1 } } },
-    { new: true }
-  );
+  req.user.wishlist.map(async (id) => {
+    let isMealInCart = await cartModel.findOne({
+      user: req.user._id,
+      "meals.mealId": id,
+    });
+    if (isMealInCart) {
+      isMealInCart.meals.forEach((mealObj) => {
+        if (mealObj.mealId.toString() === id.toString()) {
+          mealObj.quantity = mealObj.quantity + 1;
+        }
+      });
 
+      await isMealInCart.save();
+    } else {
+      await cartModel.findOneAndUpdate(
+        { user: req.user._id },
+        { $push: { meals: { id, quantity: 1 } } },
+        { new: true }
+      );
+    }
+  });
   req.user.wishlist = [];
   req.user.save();
+  const cart = await cartModel.findOne({ user: req.user._id });
   return res.json({
     success: true,
     results: cart,
-    message: "meals of whishList added successfully!",
+    message: "meals of wishList added successfully!",
   });
 });
 export const getMealInCart = asyncHandler(async (req, res, next) => {
