@@ -26,7 +26,7 @@ router.patch(
   cartController.updateCart
 );
 router.patch(
-  "/:productId",
+  "/:mealId",
   auth,
   validation(validators.removeMealFromCart),
   cartController.removeMealFromCart
