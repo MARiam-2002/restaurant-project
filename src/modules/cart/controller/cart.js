@@ -92,7 +92,7 @@ export const addWhishlist = asyncHandler(async (req, res, next) => {
       });
       const meal = await mealModel.findById(id);
       meal.favourite = false;
-      await meal.save;
+      await meal.save();
       if (isMealInCart) {
         isMealInCart.meals.forEach((mealObj) => {
           if (mealObj.mealId.toString() === id.toString()) {
