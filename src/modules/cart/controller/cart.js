@@ -60,8 +60,10 @@ export const addMealInCart = asyncHandler(async (req, res, next) => {
     await isMealInCart.save();
     return res.json({
       success: true,
-      results: isMealInCart,
-      message: "meal added successfully!",
+      data: {
+        message: "meal added successfully!",
+        results: isMealInCart,
+      },
     });
   } else {
     const cart = await cartModel.findOneAndUpdate(
@@ -71,8 +73,10 @@ export const addMealInCart = asyncHandler(async (req, res, next) => {
     );
     return res.json({
       success: true,
-      results: cart,
-      message: "meal added successfully!",
+      data: {
+        message: "meal added successfully!",
+        results: cart,
+      },
     });
   }
 });
@@ -86,6 +90,9 @@ export const addWhishlist = asyncHandler(async (req, res, next) => {
         user: user._id,
         "meals.mealId": id,
       });
+      const meal = await mealModel.findById(id);
+      meal.favourite = false;
+      await meal.save;
       if (isMealInCart) {
         isMealInCart.meals.forEach((mealObj) => {
           if (mealObj.mealId.toString() === id.toString()) {
@@ -105,7 +112,7 @@ export const addWhishlist = asyncHandler(async (req, res, next) => {
     const cart = await cartModel.findOne({ user: user._id });
 
     user.wishlist = [];
-    user.save();
+    await user.save();
     return res.json({
       success: true,
       data: {
@@ -128,7 +135,7 @@ export const getMealInCart = asyncHandler(async (req, res, next) => {
     .populate("meals.mealId", " title image.url price offer expired");
   return res.json({
     success: true,
-    results: cart,
+    data: { cart },
   });
 });
 
@@ -154,7 +161,7 @@ export const updateCart = asyncHandler(async (req, res, next) => {
   );
   return res.json({
     success: true,
-    results: cart,
+    data: { cart },
   });
 });
 
@@ -172,19 +179,24 @@ export const removeMealFromCart = asyncHandler(async (req, res, next) => {
   );
   return res.json({
     success: true,
-    results: cart,
-    message: "product deleted successfully!",
+    data: {
+      message: "product deleted successfully!",
+      results: cart,
+    },
   });
 });
 
 export const clearCart = asyncHandler(async (req, res, next) => {
-  const cart = await cartModel.findOneAndUpdate({
-    user: req.user._id,
-    meals: [],
-  });
+  const cart = await cartModel.findOneAndUpdate(
+    { user: req.user._id },
+    { meals: [] },
+    { new: true }
+  );
   return res.json({
     success: true,
-    results: cart,
-    message: "Cart cleared successfully!",
+    data: {
+      message: "Cart cleared successfully!",
+      results: cart,
+    },
   });
 });
