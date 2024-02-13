@@ -92,10 +92,13 @@ export const login = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-    token,
+    status: 200,
+    message: "login success",
+
     data: {
-      message: "login success",
-      user: { userName: user.userName, email: user.email },
+      token,
+      userName: user.userName,
+      email: user.email,
     },
   });
 });
@@ -132,7 +135,12 @@ export const sendForgetCode = asyncHandler(async (req, res, next) => {
   }))
     ? res
         .status(200)
-        .json({ success: true, token, data: { message: "check you email!" } })
+        .json({
+          success: true,
+          status: 200,
+          message: "check you email!",
+          data: { token },
+        })
     : next(new Error("Something went wrong!", { cause: 400 }));
 });
 
@@ -156,7 +164,7 @@ export const resetPasswordByCode = asyncHandler(async (req, res, next) => {
 
   return res
     .status(200)
-    .json({ success: true, data: { message: "Try to login!" } });
+    .json({ success: true,status:200, data: { message: "Try to login!" } });
 });
 
 export const VerifyCode = asyncHandler(async (req, res, next) => {
@@ -174,5 +182,5 @@ export const VerifyCode = asyncHandler(async (req, res, next) => {
 
   return res
     .status(200)
-    .json({ success: true, data: { message: "go to reset new password" } });
+    .json({ success: true,status:200, data: { message: "go to reset new password" } });
 });
