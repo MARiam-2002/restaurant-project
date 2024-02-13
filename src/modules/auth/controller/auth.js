@@ -63,7 +63,7 @@ export const login = asyncHandler(async (req, res, next) => {
   const user = await userModel.findOne({ email });
 
   if (!user) {
-    return next(new Error("Invalid-Email", { cause: 400 }));
+    return next(new Error("Email Not Found", { cause: 400 }));
   }
 
   if (!user.isConfirmed) {
@@ -73,7 +73,7 @@ export const login = asyncHandler(async (req, res, next) => {
   const match = bcryptjs.compareSync(password, user.password);
 
   if (!match) {
-    return next(new Error("Invalid-Password", { cause: 400 }));
+    return next(new Error("Invalid-Email or Password", { cause: 400 }));
   }
 
   const token = jwt.sign(
