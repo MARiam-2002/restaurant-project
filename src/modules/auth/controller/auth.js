@@ -155,7 +155,7 @@ export const resetPasswordByCode = asyncHandler(async (req, res, next) => {
   );
 
   //invalidate tokens
-  const tokens = await tokenModel.find({ user: user._id });
+  const tokens = await tokenModel.find({ user: req.user._id });
 
   tokens.forEach(async (token) => {
     token.isValid = false;
