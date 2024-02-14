@@ -164,7 +164,7 @@ export const resetPasswordByCode = asyncHandler(async (req, res, next) => {
 
   return res
     .status(200)
-    .json({ success: true,status:200, data: { message: "Try to login!" } });
+    .json({ success: true,status:200, message: "Try to login!" });
 });
 
 export const VerifyCode = asyncHandler(async (req, res, next) => {
