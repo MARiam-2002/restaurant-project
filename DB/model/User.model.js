@@ -34,7 +34,7 @@ const userSchema = new Schema(
       default: "user",
       required: true,
     },
-    wishlist: [Types.ObjectId],
+    wishlist: [{ type: Types.ObjectId, ref: "Meal" }],
     isConfirmed: {
       type: Boolean,
       default: false,
@@ -49,8 +49,7 @@ const userSchema = new Schema(
       },
       id: {
         type: String,
-        default:
-          "fast-plate/Screenshot_2022-09-10_040814_vhfktx.png",
+        default: "fast-plate/Screenshot_2022-09-10_040814_vhfktx.png",
       },
     },
     coverImages: [
