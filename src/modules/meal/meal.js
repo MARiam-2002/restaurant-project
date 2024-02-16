@@ -18,12 +18,12 @@ export const createMale = asyncHandler(async (req, res, next) => {
     image: { id: public_id, url: secure_url },
     price,
   });
-  return res.json({ success: true, data: createMeal });
+  return res.json({ success: true, status: 200, data: createMeal });
 });
 
 export const getMeal = asyncHandler(async (req, res, next) => {
   const meals = await mealModel.find({});
-  res.json({ success: true, data: { meals } });
+  res.json({ success: true, status: 200, data: meals });
 });
 
 export const redHeart = asyncHandler(async (req, res, next) => {
@@ -39,13 +39,12 @@ export const redHeart = asyncHandler(async (req, res, next) => {
     await meal.save();
     return res.status(200).json({
       success: true,
-      data: {
-        message: "This meal is deleted from wishlist",
-        result: meal,
-      },
+      status: 200,
+      message: "This meal is deleted from wishlist",
+      data: meal,
     });
   }
-  
+
   meal.favourite = true;
   await meal.save();
 
@@ -53,21 +52,19 @@ export const redHeart = asyncHandler(async (req, res, next) => {
   await req.user.save();
   return res.status(200).json({
     success: true,
-    data: {
-      message: "This meal has been added to the wishlist",
-      result: meal,
-    },
+    status: 200,
+    message: "This meal has been added to the wishlist",
+    data: meal,
   });
 });
 
 export const wishlist = asyncHandler(async (req, res, next) => {
-  const user = await userModel.findById(req.user._id);
+  const user = await userModel.findById(req.user._id).populate("wishlist");
 
   return res.status(200).json({
     success: true,
-    data: {
-      message: "These are all the products that you added to the wishlist",
-      results: user.wishlist,
-    },
+    status: 200,
+    message: "These are all the products that you added to the wishlist",
+    data: user.wishlist,
   });
 });
