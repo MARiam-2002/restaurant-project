@@ -55,7 +55,7 @@ router.post("/login", validation(Validators.login), userController.login);
 //send forget password
 
 router.patch(
-  "/forgetCode",
+  "/sendVerifyCode",
   validation(Validators.forgetCode),
   userController.sendForgetCode
 );
