@@ -14,7 +14,7 @@ const auth = asyncHandler(async (req, res, next) => {
   }
   const tokenDB = await tokenModel.findOne({ token, isValid: true });
 
-  if (!tokenDB||tokenDB.isValid) {
+  if (!tokenDB||!tokenDB.isValid) {
     return next(new Error("Token expired!"));
   }
   const authUser = await userModel.findById(decoded.id);
