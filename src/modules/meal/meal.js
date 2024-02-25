@@ -32,7 +32,7 @@ export const redHeart = asyncHandler(async (req, res, next) => {
     return next(new Error("mealId not found", { cause: 404 }));
   }
 
-  if (meal.favourite) {
+  if (!meal.favourite) {
     req.user.wishlist.pop(meal._id);
     await req.user.save();
     meal.favourite = false;
