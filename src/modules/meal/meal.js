@@ -22,7 +22,16 @@ export const createMale = asyncHandler(async (req, res, next) => {
 });
 
 export const getMeal = asyncHandler(async (req, res, next) => {
+  const mealsFav = await mealModel.find({ favourite: true });
+  console.log(mealsFav);
+  mealsFav.forEach(async (meal) => {
+    meal.favourite = false;
+    console.log(meal.favourite);
+    await meal.save();
+  });
+
   const meals = await mealModel.find({});
+
   res.json({ success: true, status: 200, data: meals });
 });
 
