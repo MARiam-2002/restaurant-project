@@ -18,5 +18,5 @@ router.put(
   mealController.redHeart
 );
 router.get("/wishlist", auth, mealController.wishlist);
-router.get("/getallMeal", mealController.getMeal);
+router.get("/getallMeal",auth, mealController.getMeal);
 export default router;
