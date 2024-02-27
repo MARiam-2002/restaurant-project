@@ -2,10 +2,19 @@ import jwt from "jsonwebtoken";
 import { asyncHandler } from "../utils/errorHandling.js";
 import userModel from "../../DB/model/User.model.js";
 import tokenModel from "../../DB/model/Token.model.js";
+import mealModel from "../../DB/model/meale.model.js";
 
 const auth = asyncHandler(async (req, res, next) => {
   let token = req.headers["token"];
   if (!token) {
+    const meals = await mealModel.find({});
+    if (meals.length > 0) {
+      meals.forEach(async (meal) => {
+        meal.favourite = false;
+        await meal.save();
+      });
+      return next();
+    }
     return res.json({ message: "In-valid token" });
   }
   const decoded = jwt.verify(token, process.env.TOKEN_SIGNATURE);
@@ -14,7 +23,7 @@ const auth = asyncHandler(async (req, res, next) => {
   }
   const tokenDB = await tokenModel.findOne({ token, isValid: true });
 
-  if (!tokenDB||!tokenDB.isValid) {
+  if (!tokenDB || !tokenDB.isValid) {
     return next(new Error("Token expired!"));
   }
   const authUser = await userModel.findById(decoded.id);
