@@ -59,7 +59,10 @@ export const redHeart = asyncHandler(async (req, res, next) => {
 
   if (meal.favourite) {
     const user= await userModel.findById(req.user._id);
-    user.wishlist.pop(meal._id);
+    const index = user.wishlist.indexOf(meal._id);
+    if (index !== -1) {
+      user.wishlist.splice(index, 1);
+    }
     await user.save();
     meal.favourite = false;
     await meal.save();
