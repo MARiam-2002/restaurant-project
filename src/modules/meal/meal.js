@@ -52,7 +52,7 @@ export const getMeal = asyncHandler(async (req, res, next) => {
 });
 
 export const redHeart = asyncHandler(async (req, res, next) => {
-  const meal = await mealModel.findById(req.params.mealId);
+  let meal = await mealModel.findById(req.params.mealId);
   if (!meal) {
     return next(new Error("mealId not found", { cause: 404 }));
   }
