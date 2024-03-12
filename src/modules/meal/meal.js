@@ -22,23 +22,8 @@ export const createMale = asyncHandler(async (req, res, next) => {
 });
 
 export const getMeal = asyncHandler(async (req, res, next) => {
-  const meals = await mealModel.find({});
   if (req.user) {
-    const user = await userModel.findOne({ email: req.user.email });
-    meals.forEach(async (meal) => {
-      let flge = false;
-
-      user.wishlist.forEach((userWishlist) => {
-        if (userWishlist.toString() === meal._id.toString()) {
-          flge = true;
-        }
-      });
-      if (!flge) {
-        meal.favourite = false;
-        console.log(meal.favourite);
-        await meal.save();
-      }
-    });
+    const meals = await mealModel.find({});
     res.json({ success: true, status: 200, data: meals });
   } else {
     const meals = await mealModel.find({});
