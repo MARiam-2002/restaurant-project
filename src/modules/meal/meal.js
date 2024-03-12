@@ -58,8 +58,9 @@ export const redHeart = asyncHandler(async (req, res, next) => {
   }
 
   if (meal.favourite) {
-    req.user.wishlist.pop(meal._id);
-    await req.user.save();
+    const user= await userModel.findById(req.user._id);
+    user.wishlist.pop(meal._id);
+    await user.save();
     meal.favourite = false;
     await meal.save();
     return res.status(200).json({
@@ -69,12 +70,13 @@ export const redHeart = asyncHandler(async (req, res, next) => {
       data: meal,
     });
   }
+  const user= await userModel.findById(req.user._id);
 
   meal.favourite = true;
   await meal.save();
 
-  req.user.wishlist.push(meal._id);
-  await req.user.save();
+  user.wishlist.push(meal._id);
+  await user.save();
   return res.status(200).json({
     success: true,
     status: 200,
