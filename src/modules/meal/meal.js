@@ -39,8 +39,17 @@ export const getMeal = asyncHandler(async (req, res, next) => {
         await meal.save();
       }
     });
+    res.json({ success: true, status: 200, data: meals });
+  } else {
+    const meals = await mealModel.find({});
+    if (meals.length > 0) {
+      meals.forEach(async (meal) => {
+        meal.favourite = false;
+        await meal.save();
+      });
+      res.status(200).json({ success: true, status: 200, data: meals });
+    }
   }
-  res.json({ success: true, status: 200, data: meals });
 });
 
 export const redHeart = asyncHandler(async (req, res, next) => {

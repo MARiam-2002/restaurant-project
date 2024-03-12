@@ -7,15 +7,9 @@ import mealModel from "../../DB/model/meale.model.js";
 const auth = asyncHandler(async (req, res, next) => {
   let token = req.headers["token"];
   if (!token) {
-    const meals = await mealModel.find({});
-    if (meals.length > 0) {
-      meals.forEach(async (meal) => {
-        meal.favourite = false;
-        await meal.save();
-      });
+    
       return next();
-    }
-    return res.json({ message: "In-valid token" });
+    
   }
   const decoded = jwt.verify(token, process.env.TOKEN_SIGNATURE);
   if (!decoded?.id) {
