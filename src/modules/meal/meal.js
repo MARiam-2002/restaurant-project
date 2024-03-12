@@ -23,7 +23,7 @@ export const createMale = asyncHandler(async (req, res, next) => {
 
 export const getMeal = asyncHandler(async (req, res, next) => {
   const meals = await mealModel.find({});
-  if (req.use) {
+  if (req.user) {
     const user = await userModel.findOne({ email: req.user.email });
     meals.forEach(async (meal) => {
       let flge = false;
