@@ -24,20 +24,15 @@ export const createMale = asyncHandler(async (req, res, next) => {
 export const getMeal = asyncHandler(async (req, res, next) => {
   if (req.user) {
     const meals = await mealModel.find({});
-    // const user = await userModel.findOne({ email: req.user.email });
-    // meals.forEach(async (meal) => {
-    //   let flge = false;
-
-    //   user.wishlist.forEach((userWishlist) => {
-    //     if (userWishlist.toString() === meal._id.toString()) {
-    //       flge = true;
-    //     }
-    //   });
-    //   if (!flge) {
-    //     meal.favourite = false;
-    //     await meal.save();
-    //   }
-    // });
+    const user = await userModel.findOne({ email: req.user.email });
+    meals.forEach(async (meal) => {
+      const isLiked = user.wishlist.includes(meal._id);
+      console.log(isLiked);
+      if (!isLiked) {
+        meal.favourite = false;
+        await meal.save();
+      }
+    });
     res.json({ success: true, status: 200, data: meals });
   } else {
     const meals = await mealModel.find({});
@@ -58,7 +53,7 @@ export const redHeart = asyncHandler(async (req, res, next) => {
   }
 
   if (meal.favourite) {
-    const user= await userModel.findById(req.user._id);
+    const user = await userModel.findById(req.user._id);
     const index = user.wishlist.indexOf(meal._id);
     if (index !== -1) {
       user.wishlist.splice(index, 1);
@@ -73,7 +68,7 @@ export const redHeart = asyncHandler(async (req, res, next) => {
       data: meal,
     });
   }
-  const user= await userModel.findById(req.user._id);
+  const user = await userModel.findById(req.user._id);
 
   meal.favourite = true;
   await meal.save();
