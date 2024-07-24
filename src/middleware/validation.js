@@ -40,6 +40,7 @@ export const validation = (Schema) => {
       ...req.params,
       ...req.query,
       ...req.files,
+      ...req.file, // For single files
     };
     const validationResult = Schema.validate(copyReq, { abortEarly: false });
     if (validationResult.error) {
