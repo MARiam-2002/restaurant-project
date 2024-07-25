@@ -29,7 +29,7 @@ export const register = asyncHandler(async (req, res, next) => {
     activationCode,
   });
 
-  const link = `https://restaurant-project-drab.vercel.app/auth/confirmEmail/${activationCode}`;
+  const link = `https://restaurant-project-kohl.vercel.app/auth/confirmEmail/${activationCode}`;
 
   const isSent = await sendEmail({
     to: email,
